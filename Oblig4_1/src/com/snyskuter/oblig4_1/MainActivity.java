@@ -21,12 +21,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		AsyncTask.execute(new Runnable() {
-			@Override
-			public void run() {
-				download("http://fil.nrk.no/yr/viktigestader/noreg.txt", "norge.txt");
-			}		
-		});
+		downloadAsync("http://fil.nrk.no/yr/viktigestader/noreg.txt", "norge.txt");			
 	}
 
 	@Override
@@ -35,20 +30,25 @@ public class MainActivity extends Activity {
 		return true;
 	}
     	 
-    private void download(String url, String saveAs) {
-	    try {
-	        URLConnection conn = new URL(url).openConnection();
-	        
-	        BufferedInputStream input = new BufferedInputStream(conn.getInputStream());
-	        FileOutputStream output = openFileOutput(saveAs, Context.MODE_PRIVATE);
-	
-	        byte[] buffer = new byte[4096];
-	        int bytes = 0;
-	        while ((bytes = input.read(buffer)) != -1) {
-	        	output.write(buffer, 0, bytes);
-	        }	        
-	        input.close();
-	        output.close();	
-	    } catch (IOException e) { }
+    private void downloadAsync(final String url, final String saveAs) {
+    	AsyncTask.execute(new Runnable() {
+			@Override
+			public void run() {
+			    try {
+			        URLConnection conn = new URL(url).openConnection();
+			        
+			        BufferedInputStream input = new BufferedInputStream(conn.getInputStream());
+			        FileOutputStream output = openFileOutput(saveAs, Context.MODE_PRIVATE);
+			
+			        byte[] buffer = new byte[4096];
+			        int bytes = 0;
+			        while ((bytes = input.read(buffer)) != -1) {
+			        	output.write(buffer, 0, bytes);
+			        }	        
+			        input.close();
+			        output.close();	
+			    } catch (IOException e) { }
+			}		
+		});
     }
 }
