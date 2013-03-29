@@ -7,10 +7,13 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="17" />
-    
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
@@ -26,5 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.snyskuter.oblig4_1.SearchActivity"
+            android:label="@string/title_activity_search" >
+        </activity>
     </application>
+
 </manifest>
