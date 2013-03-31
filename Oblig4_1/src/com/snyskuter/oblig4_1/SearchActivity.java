@@ -13,22 +13,26 @@ import android.widget.TextView;
 
 public class SearchActivity extends ListActivity {
 	private final Context context = this;
+	private ArrayAdapter<String> adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		
+		adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, new ArrayList<String>());
+		setListAdapter(adapter);
+		
 		TextView searchInput = (TextView)findViewById(R.id.searchInput);
 		searchInput.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void afterTextChanged(Editable arg0) { }
+			public void afterTextChanged(Editable text) { }
 			
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
+			public void beforeTextChanged(CharSequence text, int start, int count, int after) { }
 			
 			@Override
-			public void onTextChanged(CharSequence text, int arg1, int arg2, int arg3) {
+			public void onTextChanged(CharSequence text, int start, int before, int count) {
 				if (text.length() > 0) {
 					DataRunnable<String> doneHandler = new DataRunnable<String>() {
 						@Override
@@ -40,8 +44,9 @@ public class SearchActivity extends ListActivity {
 								if (data.length > 0) {
 									results.add(data[0]);
 								}
-							}									
-							setListAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, results));
+							}
+							adapter.clear();
+							adapter.addAll(results);
 						}
 					};
 					text = text.toString().replace(' ', '+');
@@ -53,7 +58,7 @@ public class SearchActivity extends ListActivity {
 					}
 				}
 				else {
-					setListAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, new String[0]));
+					adapter.clear();
 				}
 			}
 		});
