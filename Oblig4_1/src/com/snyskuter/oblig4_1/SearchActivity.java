@@ -92,15 +92,15 @@ public class SearchActivity extends ListActivity {
 				SearchItem item = (SearchItem)getListView().getItemAtPosition(arg2);
 				String url = item.getURL();
 				
-				if (!selected.contains(url)) {
+				if (!TemperatureService.getPlaces().contains(url)) {
 					TemperatureService.addPlace(url);
-					selected.add(url);
+					//selected.add(url);
 					arg1.setBackgroundColor(highlight);
 					adapter.notifyDataSetChanged();
 				}
 				else {
 					TemperatureService.removePlace(url);
-					selected.remove(url);
+					//selected.remove(url);
 					arg1.setBackgroundColor(Color.TRANSPARENT);
 					adapter.notifyDataSetChanged();
 				}
@@ -114,6 +114,7 @@ public class SearchActivity extends ListActivity {
 		ArrayList<SearchItem> results = new ArrayList<SearchItem>();
 		String[] lines = data.split("\n");
 		int i = 0;
+		ArrayList<String> places = TemperatureService.getPlaces();
 		for (String line : lines) {
 			String[] lineSplit = line.split("\t");
 			String name = lineSplit[0];
@@ -125,7 +126,7 @@ public class SearchActivity extends ListActivity {
 					getListView().getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
 				}
 				
-				if (selected.contains(url)) {
+				if (places.contains(url)) {
 					//name += " <--";
 					if (getListView().getChildAt(i) != null) {
 						getListView().getChildAt(i).setBackgroundColor(highlight);
