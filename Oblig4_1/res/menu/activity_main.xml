@@ -9,19 +9,27 @@
    
     <item
         android:id="@+id/LeggTil"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always"
         android:icon="@drawable/add"
         >
     </item>
     <item
         android:id="@+id/Slett"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always"
         android:icon="@drawable/delete">
         
     </item>
+    <item 
+        android:id="@+id/start"
+        android:showAsAction="always"
+        android:icon="@drawable/start"/>
+     <item 
+        android:id="@+id/stop"
+        android:showAsAction="always"
+        android:icon="@drawable/stop"/>
     <item
         android:id="@+id/Instillinger"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always"
         android:icon="@drawable/properties"
        >
     </item>

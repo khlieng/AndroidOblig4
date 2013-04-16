@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main, menu);
+		menu.add(1, 2, Menu.FIRST+1, "Item2");
 		
 		return true;
 	}
