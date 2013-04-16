@@ -18,6 +18,10 @@ public class Tools {
 		Tools.context = context;
 	}
 	
+	public static Context getContext() {
+		return context;
+	}
+	
 	public static void downloadFileAsync(final String url, final String saveAs, final Runnable done) {
     	AsyncTask.execute(new Runnable() {
 			@Override

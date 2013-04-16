@@ -91,11 +91,13 @@ public class SearchActivity extends ListActivity {
 				String url = item.getURL();
 				
 				if (!selected.contains(url)) {
+					TemperatureService.addPlace(url);
 					selected.add(url);
 					arg1.setBackgroundColor(highlight);
 					adapter.notifyDataSetChanged();
 				}
 				else {
+					TemperatureService.removePlace(url);
 					selected.remove(url);
 					arg1.setBackgroundColor(Color.TRANSPARENT);
 					adapter.notifyDataSetChanged();
