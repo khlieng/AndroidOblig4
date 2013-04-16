@@ -8,8 +8,8 @@
         android:layout_height="wrap_content"
         android:hint="Stedsnavn/postnr"
         android:inputType="text" />
-    "
-	<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    
+	<ListView 
 		android:id="@id/android:list"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
