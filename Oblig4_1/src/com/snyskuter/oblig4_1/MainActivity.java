@@ -25,9 +25,20 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+<<<<<<< HEAD
 		done();
 		//downloadAsync("http://fil.nrk.no/yr/viktigestader/noreg.txt", "norge.txt");
 		//downloadAsync("http://192.168.1.3/places/Narvik", "test.txt");
+=======
+		
+		Tools.init(this);
+		
+		startService(new Intent(this, TemperatureService.class));
+		stopService(new Intent(this, TemperatureService.class));
+		
+		Intent intent = new Intent(this, SearchActivity.class);
+		startActivity(intent);
+>>>>>>> f5b09ec8b30c6494ab6c1a8c8a89efba1c41dcfb
 	}
 
 	@Override
