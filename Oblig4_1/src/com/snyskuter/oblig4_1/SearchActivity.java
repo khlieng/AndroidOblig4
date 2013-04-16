@@ -109,37 +109,7 @@ public class SearchActivity extends ListActivity {
 		});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_search, menu);
-		
-		return true;
-	}
 	
-	
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		
-		switch (item.getItemId()) {
-		case R.id.LeggTil:
-			 Toast.makeText(this, "Legg til", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.Slett:
-			Toast.makeText(this, "Slett", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.Instillinger:
-			Toast.makeText(this, "Instillinger", Toast.LENGTH_SHORT).show();
-			break;
-
-		default:
-			break;
-		}
-		return true;
-	}
-
 	private void updateList(String data) {
 		ArrayList<SearchItem> results = new ArrayList<SearchItem>();
 		String[] lines = data.split("\n");

@@ -5,20 +5,5 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_settings"/>
-    <item
-        android:id="@+id/LeggTil"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_item_legg_til">
-    </item>
-    <item
-        android:id="@+id/Slett"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_item_slett">
-    </item>
-    <item
-        android:id="@+id/Instillinger"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_item_instillinger">
-    </item>
 
 </menu>
