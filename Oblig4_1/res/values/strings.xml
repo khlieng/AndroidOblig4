@@ -8,5 +8,6 @@
      <string name="menu_item_legg_til">Legg til</string>
      <string name="menu_item_slett">Slett</string>
      <string name="menu_item_instillinger">Instillinger</string>
+       <string name="Button_save_alert_dialog">Lagre</string>
 
 </resources>
