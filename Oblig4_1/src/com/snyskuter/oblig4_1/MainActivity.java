@@ -14,6 +14,9 @@ public class MainActivity extends Activity {
 		
 		Tools.init(this);
 		
+		startService(new Intent(this, TemperatureService.class));
+		stopService(new Intent(this, TemperatureService.class));
+		
 		Intent intent = new Intent(this, SearchActivity.class);
 		startActivity(intent);
 	}
