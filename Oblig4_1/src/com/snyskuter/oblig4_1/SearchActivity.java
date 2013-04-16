@@ -50,7 +50,7 @@ public class SearchActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		
-		adapter = new ArrayAdapter<SearchItem>(context, android.R.layout.simple_list_item_1, new ArrayList<SearchItem>());		
+		adapter = new ArrayAdapter<SearchItem>(context, android.R.layout.simple_list_item_1, new ArrayList<SearchItem>());
 		setListAdapter(adapter);
 		
 		TextView searchInput = (TextView)findViewById(R.id.searchInput);

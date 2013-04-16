@@ -27,7 +27,7 @@ public class TemperatureService extends Service {
 	private int updateInterval = 15 * 60000;
 	private Timer updateTimer = new Timer();
 	private ArrayList<TemperatureData> temperatures = new ArrayList<TemperatureData>();
-	Handler handler = new Handler();
+	private Handler handler = new Handler();
 	
 	@Override
 	public void onCreate() {
@@ -146,14 +146,21 @@ public class TemperatureService extends Service {
 	
 	public class TemperatureData {
 		private String place;
+		private String url;
 		private String temperature;
 		
-		public String getPlace() { return place; }		
+		public String getPlace() { return place; }
+		public String getUrl() { return url; }
 		public String getTemperature() { return temperature; }
 		
-		public TemperatureData(String place, String temperature) {
+		public TemperatureData(String place, String url, String temperature) {
 			this.place = place;
+			this.url = url;
 			this.temperature = temperature;
+		}
+		
+		public String toString() {
+			return place;
 		}
 	}
 }
