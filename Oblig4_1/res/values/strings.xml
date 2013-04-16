@@ -5,5 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_search">SearchActivity</string>
+     <string name="menu_item_legg_til">Legg til</string>
+     <string name="menu_item_slett">Slett</string>
+     <string name="menu_item_instillinger">Instillinger</string>
 
 </resources>
