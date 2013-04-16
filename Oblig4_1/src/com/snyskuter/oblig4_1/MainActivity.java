@@ -28,17 +28,19 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main, menu);
-		menu.add(1, 2, Menu.FIRST+1, "Item2");
+		
 		
 		return true;
 	}
 	
 	
 	
+	/** (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		
 		switch (item.getItemId()) {
 		case R.id.LeggTil:
 			 Toast.makeText(this, "Legg til", Toast.LENGTH_SHORT).show();
@@ -51,6 +53,12 @@ public class MainActivity extends Activity {
 		case R.id.Instillinger:
 			Toast.makeText(this, "Instillinger", Toast.LENGTH_SHORT).show();
 			break;
+		case R.id.start:
+			Toast.makeText(this, "Starting service", Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.stop:
+			Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show();
+			break;
 
 		default:
 			break;
@@ -58,4 +66,4 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-}
+}//end activiy
