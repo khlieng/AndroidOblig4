@@ -49,7 +49,7 @@ public class TemperatureService extends Service {
 			public void run() {
 				updateTemperatures();
 			}
-		}, 1000, updateInterval);
+		}, 100, updateInterval);
 		
 		toast("create");
 	}
