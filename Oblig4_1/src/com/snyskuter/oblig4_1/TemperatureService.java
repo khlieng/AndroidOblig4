@@ -9,12 +9,19 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.widget.Toast;
 
 public class TemperatureService extends Service {
@@ -22,16 +29,19 @@ public class TemperatureService extends Service {
 	public static TemperatureService getInstance() {
 		return instance;
 	}
-	private static ArrayList<String> places = new ArrayList<String>();
+	private static ArrayList<String> places;
 	
 	private int updateInterval = 15 * 60000;
 	private Timer updateTimer = new Timer();
-	private ArrayList<TemperatureData> temperatures = new ArrayList<TemperatureData>();
+	private ArrayList<TemperatureData> temperatures;
+	private static ArrayList<Runnable> updateListeners = new ArrayList<Runnable>();
 	private Handler handler = new Handler();
 	
 	@Override
 	public void onCreate() {
 		instance = this;
+		places = new ArrayList<String>();
+		temperatures = new ArrayList<TemperatureData>();
 		loadPlaces();
 		
 		updateTimer.schedule(new TimerTask() {
@@ -39,7 +49,7 @@ public class TemperatureService extends Service {
 			public void run() {
 				updateTemperatures();
 			}
-		}, 0, updateInterval);
+		}, 1000, updateInterval);
 		
 		toast("create");
 	}
@@ -69,21 +79,40 @@ public class TemperatureService extends Service {
 		return updateInterval;
 	}
 	
+	public static void addUpdateListener(Runnable r) {
+		updateListeners.add(r);
+	}
+	
 	private void updateTemperatures() {
+		temperatures.clear();
 		for (final String url : places) {
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-					HTTP.GET(url, new DataRunnable<String>() {
-						@Override
-						public void run() {
-							String xml = getData();
-							
-							// Parse xml og putt temperaturen i temperaturlista her
-						}				
-					});
-				}
-			});
+			updateTemperature(url, false);
+		}
+		updateFinished();
+	}
+	
+	private void updateTemperature(String url, boolean notifyListeners) {
+		try {
+			DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder;
+			builder = fac.newDocumentBuilder();
+			Document doc = builder.parse(url);
+			doc.getDocumentElement().normalize();
+			Element e = (Element)doc.getElementsByTagName("weatherstation").item(0);
+			String place = ((Element)doc.getElementsByTagName("name").item(0)).getTextContent();
+			String temperature = e.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("value").getNodeValue();
+
+			temperatures.add(new TemperatureData(place, url, temperature));
+		} catch (Exception e) { }
+		
+		if (notifyListeners) {
+			updateFinished();
+		}
+	}
+	
+	private void updateFinished() {
+		for (Runnable listener : updateListeners) {
+			listener.run();
 		}
 	}
 	
@@ -94,6 +123,11 @@ public class TemperatureService extends Service {
 	public static void addPlace(String url) {
 		if (!places.contains(url)) {
 			places.add(url);
+			
+			if (instance != null) {
+				instance.updateTemperature(url, true);
+			}
+			
 			savePlaces();
 		}
 	}

@@ -7,7 +7,9 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,15 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
-
 	private Button saveButtonAlertDialog;
 	final Context context = this;
+	private Handler handler = new Handler();
+	private boolean removing = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,7 @@ public class MainActivity extends ListActivity {
 		ArrayList<TemperatureData> temp = new ArrayList<TemperatureData>();
 		temp.add(new TemperatureData("Narvik", "", "-40"));
 		temp.add(new TemperatureData("Harstad", "", "3"));
-		setListAdapter(new TemperatureAdapter(this, R.layout.row_temperature, temp));
+		//setListAdapter(new TemperatureAdapter(this, R.layout.row_temperature, temp));
 		
 
 		startService(new Intent(this, TemperatureService.class));
@@ -43,6 +48,27 @@ public class MainActivity extends ListActivity {
 
 		
 		startService(new Intent(this, TemperatureService.class));
+		TemperatureService.addUpdateListener(new Runnable() {
+			public void run() {
+				handler.post(new Runnable() {
+					public void run() {
+						Toast.makeText(context, "updating", Toast.LENGTH_LONG).show();
+						setListAdapter(new TemperatureAdapter(context, R.layout.row_temperature, TemperatureService.getInstance().getTemperatures()));
+					}
+				});
+			}
+		});
+		
+		getListView().setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				if (removing) {
+					TemperatureData data = (TemperatureData)getListAdapter().getItem(arg2);
+					((ArrayAdapter<TemperatureData>)getListAdapter()).remove(data);
+					TemperatureService.removePlace(data.getUrl());
+				}
+			}			
+		});
 	}
 
 	@Override
@@ -65,7 +91,13 @@ public class MainActivity extends ListActivity {
 			 startActivity(i);
 			break;
 		case R.id.Slett:
-			Toast.makeText(this, "Slett", Toast.LENGTH_SHORT).show();
+			removing = !removing;
+			if (removing) {
+				item.getIcon().setColorFilter(Color.RED, Mode.MULTIPLY);
+			}
+			else {
+				item.getIcon().clearColorFilter();
+			}
 			break;
 		case R.id.Instillinger:
 			Toast.makeText(this, "Instillinger", Toast.LENGTH_SHORT).show();
@@ -130,16 +162,16 @@ public class MainActivity extends ListActivity {
         public View getView(final int position, View view, ViewGroup parent) {
             final View v = getLayoutInflater().inflate(R.layout.row_temperature, null);
             TextView place = (TextView)v.findViewById(R.id.place);
-            //place.setFocusable(false);
-            //place.setFocusableInTouchMode(false);
+            place.setFocusable(false);
+            place.setFocusableInTouchMode(false);
             place.setText(entries.get(position).getPlace());
             
             TextView temperature = (TextView)v.findViewById(R.id.temperature);
-            //temperature.setFocusable(false);
-            //temperature.setFocusableInTouchMode(false);
+            temperature.setFocusable(false);
+            temperature.setFocusableInTouchMode(false);
             temperature.setText(entries.get(position).getTemperature() + (char)0x00B0);
             
-            int temp = Integer.parseInt(entries.get(position).getTemperature());
+            float temp = Float.parseFloat(entries.get(position).getTemperature());
             if (temp < 0) {
             	temperature.setTextColor(Color.BLUE);
             }
