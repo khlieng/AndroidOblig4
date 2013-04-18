@@ -1,9 +1,12 @@
 package com.snyskuter.oblig4_1;
 
-import android.app.Activity;
+import java.util.ArrayList;
+
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,11 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
 
 	private Button saveButtonAlertDialog;
 	final Context context = this;
@@ -25,13 +30,19 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Tools.init(this);
+		ArrayList<TemperatureData> temp = new ArrayList<TemperatureData>();
+		temp.add(new TemperatureData("Narvik", "", "-40"));
+		temp.add(new TemperatureData("Harstad", "", "3"));
+		setListAdapter(new TemperatureAdapter(this, R.layout.row_temperature, temp));
 		
+
 		startService(new Intent(this, TemperatureService.class));
 		//stopService(new Intent(this, TemperatureService.class));
+
+		Tools.init(this);
+
 		
-		//Intent intent = new Intent(this, SearchActivity.class);
-		//startActivity(intent);
+		startService(new Intent(this, TemperatureService.class));
 	}
 
 	@Override
@@ -39,18 +50,14 @@ public class MainActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main, menu);
 		
-		
 		return true;
 	}
-	
-	
 	
 	/** (non-Javadoc)
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
 		case R.id.LeggTil:
 			 Toast.makeText(this, "Legg til", Toast.LENGTH_SHORT).show();
@@ -111,4 +118,36 @@ public class MainActivity extends Activity {
 					dialog.show();
 	}
 
+	private class TemperatureAdapter extends ArrayAdapter<TemperatureData> {
+		private ArrayList<TemperatureData> entries;
+		
+		public TemperatureAdapter(Context context, int textViewResourceId, ArrayList<TemperatureData> entries) {
+			super(context, textViewResourceId, entries);
+			this.entries = entries;
+		}
+		
+		@Override
+        public View getView(final int position, View view, ViewGroup parent) {
+            final View v = getLayoutInflater().inflate(R.layout.row_temperature, null);
+            TextView place = (TextView)v.findViewById(R.id.place);
+            //place.setFocusable(false);
+            //place.setFocusableInTouchMode(false);
+            place.setText(entries.get(position).getPlace());
+            
+            TextView temperature = (TextView)v.findViewById(R.id.temperature);
+            //temperature.setFocusable(false);
+            //temperature.setFocusableInTouchMode(false);
+            temperature.setText(entries.get(position).getTemperature() + (char)0x00B0);
+            
+            int temp = Integer.parseInt(entries.get(position).getTemperature());
+            if (temp < 0) {
+            	temperature.setTextColor(Color.BLUE);
+            }
+            else {
+            	temperature.setTextColor(Color.RED);
+            }
+            
+            return v;
+		}
+	}
 }//end activiy
