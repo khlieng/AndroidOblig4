@@ -2,21 +2,64 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
- 
-    
- 
-    <TextView
-        android:id="@+id/textAlertDialog"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#FFF" 
-        />
- 
+
+     <TextView
+         android:id="@+id/textViewIntervall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true"
+         android:text="@string/textviewIntervall" />
+
+     <EditText
+         android:id="@+id/editText1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textViewIntervall"
+         android:ems="10" >
+
+         <requestFocus />
+     </EditText>
+     
+       <EditText
+         android:id="@+id/editTextNedreGrense"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textViewNedreGrense"
+         android:ems="10" />
+
+     <TextView
+         android:id="@+id/textViewNedreGrense"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/editText1"
+         android:text="@string/textviewNedreGrense" />
+
+     <TextView
+         android:id="@+id/textViewOvreGrense"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignRight="@+id/textViewNedreGrense"
+         android:layout_below="@+id/editTextNedreGrense"
+         android:text="@string/textviewOvregrense" />
+
+     <EditText
+         android:id="@+id/editTextOvreGrense"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/textViewOvreGrense"
+         android:ems="10" />
+
      <Button
          android:id="@+id/dialogButtonSaveAlert"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:layout_marginTop="5dp"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/editTextOvreGrense"
          android:text="@string/Button_save_alert_dialog" />
  
 </RelativeLayout>

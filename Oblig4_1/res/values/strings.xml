@@ -9,5 +9,8 @@
      <string name="menu_item_slett">Slett</string>
      <string name="menu_item_instillinger">Instillinger</string>
        <string name="Button_save_alert_dialog">Lagre</string>
+       <string name="textviewIntervall">Nedlastings intervall(min)</string>
+        <string name="textviewOvregrense">Øvre grense</string>
+         <string name="textviewNedreGrense">Nedre grense</string>
 
 </resources>

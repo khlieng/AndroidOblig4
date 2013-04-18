@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,10 @@ public class MainActivity extends ListActivity {
 	final Context context = this;
 	private Handler handler = new Handler();
 	private boolean removing = false;
+	
+	private EditText intervall;
+	private EditText nedreGrense;
+	private EditText ovreGrense;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +135,9 @@ public class MainActivity extends ListActivity {
 		
 
 		// set the custom dialog components - text, image and button
-		TextView text = (TextView) dialog.findViewById(R.id.textAlertDialog);
-		text.setText("Ganster!");
+		nedreGrense = (EditText)findViewById(R.id.editTextNedreGrense);
+		ovreGrense = (EditText) findViewById(R.id.editTextOvreGrense);
+		intervall = (EditText)findViewById(R.id.editText1);
 		
 		
 		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonSaveAlert);
