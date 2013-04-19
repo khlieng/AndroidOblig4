@@ -205,11 +205,14 @@ public class TemperatureService extends Service {
 	private void toast(String text) {
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
 	}
-
+	
+	/**
+	 * Brukes for å lage en notification
+	 * @param v
+	 */
 	public void notiFyMe(View v) {
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notification = new Notification(R.drawable.add, "Notification!",
-				System.currentTimeMillis());
+		notification = new Notification(R.drawable.add, "Notification!",System.currentTimeMillis());
 		Context context = getApplicationContext();
 		String notificationTitle = "Temperatur Notification";
 		String notificationText = "Temperatur";
@@ -221,6 +224,6 @@ public class TemperatureService extends Service {
 		notification.setLatestEventInfo(context, notificationTitle,
 				notificationText, pendingIntent);
 		notificationManager.notify(MY_NOTIFICATION_ID, notification);
-	}
+	}//end method
 
-}
+}//end class
