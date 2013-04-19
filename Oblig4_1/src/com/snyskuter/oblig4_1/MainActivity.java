@@ -144,7 +144,7 @@ public class MainActivity extends ListActivity {
 				if(TemperatureService.getInstance() != null) {
 					TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
 					TemperatureService.getInstance().setNedreGrense(Float.parseFloat(nedreGrense.getText().toString()));
-					TemperatureService.getInstance().setNedreGrense(Float.parseFloat(ovreGrense.getText().toString()));
+					TemperatureService.getInstance().setOvreGrense(Float.parseFloat(ovreGrense.getText().toString()));
 				}
 				dialog.dismiss();
 			}
