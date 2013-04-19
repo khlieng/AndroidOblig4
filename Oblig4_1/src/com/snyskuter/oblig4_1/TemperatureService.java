@@ -212,7 +212,7 @@ public class TemperatureService extends Service {
 				System.currentTimeMillis());
 		Context context = getApplicationContext();
 		String notificationTitle = "Temperatur Notification";
-		String notificationText = "TemperaturSHIT";
+		String notificationText = "Temperatur";
 		Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(myBlog));
 		PendingIntent pendingIntent = PendingIntent.getActivity(TemperatureService.this, 0, myIntent,
 				Intent.FLAG_ACTIVITY_NEW_TASK);
