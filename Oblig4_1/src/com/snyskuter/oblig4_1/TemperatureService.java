@@ -139,9 +139,9 @@ public class TemperatureService extends Service {
 		}
 	}
 	
-	private static void loadPlaces() {
+	private void loadPlaces() {
 		try {
-			Scanner scan = new Scanner(Tools.getContext().openFileInput("trackedPlaces.txt"));
+			Scanner scan = new Scanner(getApplicationContext().openFileInput("trackedPlaces.txt"));
 			while (scan.hasNextLine()) {
 				places.add(scan.nextLine());
 			}

@@ -39,20 +39,9 @@ public class MainActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		ArrayList<TemperatureData> temp = new ArrayList<TemperatureData>();
-		temp.add(new TemperatureData("Narvik", "", "-40"));
-		temp.add(new TemperatureData("Harstad", "", "3"));
-		//setListAdapter(new TemperatureAdapter(this, R.layout.row_temperature, temp));
-		
-
-		startService(new Intent(this, TemperatureService.class));
-		//stopService(new Intent(this, TemperatureService.class));
 
 		Tools.init(this);
-
 		
-		startService(new Intent(this, TemperatureService.class));
 		TemperatureService.addUpdateListener(new Runnable() {
 			public void run() {
 				handler.post(new Runnable() {
@@ -63,6 +52,13 @@ public class MainActivity extends ListActivity {
 				});
 			}
 		});
+
+		if (TemperatureService.getInstance() != null) {
+			setListAdapter(new TemperatureAdapter(context, R.layout.row_temperature, TemperatureService.getInstance().getTemperatures()));
+		}
+		else {
+			startService(new Intent(this, TemperatureService.class));
+		}
 		
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			@Override
