@@ -133,32 +133,25 @@ public class MainActivity extends ListActivity {
 		dialog.setContentView(R.layout.properties_custom);
 		dialog.setTitle("Instillinger");
 		
-
 		// set the custom dialog components - text, image and button
-		nedreGrense = (EditText)findViewById(R.id.editTextNedreGrense);
-		ovreGrense = (EditText) findViewById(R.id.editTextOvreGrense);
-		intervall = (EditText)findViewById(R.id.editText1);
+		nedreGrense = (EditText)dialog.findViewById(R.id.editTextNedreGrense);
+		ovreGrense = (EditText)dialog.findViewById(R.id.editTextOvreGrense);
+		intervall = (EditText)dialog.findViewById(R.id.editText1);
 		
-		
-		
-		
-		
-		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonSaveAlert);
-		
-		
-					dialogButton.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Log.e("Saving button clicked", "Click");
-							Toast.makeText(getApplicationContext(), "Saving.....", Toast.LENGTH_SHORT).show();
-						if(TemperatureService.getInstance() == null){
-							TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
-						}
-							dialog.dismiss();
-						}
-					});
-		 
-					dialog.show();
+		Button dialogButton = (Button)dialog.findViewById(R.id.dialogButtonSaveAlert);
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.e("Saving button clicked", "Click");
+				Toast.makeText(getApplicationContext(), "Saving.....", Toast.LENGTH_SHORT).show();
+				if(TemperatureService.getInstance() != null) {
+					TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
+				}
+				dialog.dismiss();
+			}
+		});
+ 
+		dialog.show();
 	}
 
 	private class TemperatureAdapter extends ArrayAdapter<TemperatureData> {
