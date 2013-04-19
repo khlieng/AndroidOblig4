@@ -122,6 +122,7 @@ public class TemperatureService extends Service {
 	private void updateTemperatures() {
 		temperatures.clear();
 		s = "";
+		b = "";
 		for (final String url : places) {
 			updateTemperature(url, false);
 		}
