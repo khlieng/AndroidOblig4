@@ -140,6 +140,9 @@ public class MainActivity extends ListActivity {
 		intervall = (EditText)findViewById(R.id.editText1);
 		
 		
+		
+		
+		
 		Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonSaveAlert);
 		
 		
@@ -148,7 +151,9 @@ public class MainActivity extends ListActivity {
 						public void onClick(View v) {
 							Log.e("Saving button clicked", "Click");
 							Toast.makeText(getApplicationContext(), "Saving.....", Toast.LENGTH_SHORT).show();
-							
+						if(TemperatureService.getInstance() == null){
+							TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
+						}
 							dialog.dismiss();
 						}
 					});
@@ -187,5 +192,7 @@ public class MainActivity extends ListActivity {
             
             return v;
 		}
+		
+		
 	}
 }//end activiy
