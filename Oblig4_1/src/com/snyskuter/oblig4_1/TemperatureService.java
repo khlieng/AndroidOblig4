@@ -33,6 +33,7 @@ public class TemperatureService extends Service {
 	
 	private int updateInterval = 15 * 60000;
 	private Timer updateTimer = new Timer();
+	private TimerTask updateTask;
 	private ArrayList<TemperatureData> temperatures;
 	private static ArrayList<Runnable> updateListeners = new ArrayList<Runnable>();
 	private Handler handler = new Handler();
@@ -44,12 +45,7 @@ public class TemperatureService extends Service {
 		temperatures = new ArrayList<TemperatureData>();
 		loadPlaces();
 		
-		updateTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				updateTemperatures();
-			}
-		}, 100, updateInterval);
+		startUpdateTimer();
 		
 		toast("create");
 	}
@@ -72,7 +68,9 @@ public class TemperatureService extends Service {
 	}
 	
 	public void setUpdateInterval(int interval) {
-		updateInterval = interval;
+		updateInterval = interval * 60000;
+		updateTask.cancel();
+		startUpdateTimer();
 	}
 	
 	public int getUpdateInterval() {
@@ -81,6 +79,16 @@ public class TemperatureService extends Service {
 	
 	public static void addUpdateListener(Runnable r) {
 		updateListeners.add(r);
+	}
+	
+	private void startUpdateTimer() {
+		updateTask = new TimerTask() {
+			@Override
+			public void run() {
+				updateTemperatures();
+			}
+		};
+		updateTimer.schedule(updateTask, 0, updateInterval);
 	}
 	
 	private void updateTemperatures() {
