@@ -46,8 +46,8 @@ public class TemperatureService extends Service {
 	private ArrayList<TemperatureData> temperatures;
 	private static ArrayList<Runnable> updateListeners = new ArrayList<Runnable>();
 	private Handler handler = new Handler();
-	private float nedreGrense;
-	private float ovreGrense;
+	private float nedreGrense = -10;
+	private float ovreGrense = 20;
 	
 	String s ="";
 	String b = "";
@@ -102,7 +102,7 @@ public class TemperatureService extends Service {
 	}
 
 	public int getUpdateInterval() {
-		return updateInterval;
+		return updateInterval / 60000;
 	}
 
 	public static void addUpdateListener(Runnable r) {

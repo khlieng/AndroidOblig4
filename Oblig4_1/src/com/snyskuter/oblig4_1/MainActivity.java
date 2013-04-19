@@ -129,10 +129,16 @@ public class MainActivity extends ListActivity {
 		dialog.setContentView(R.layout.properties_custom);
 		dialog.setTitle("Instillinger");
 		
+		TemperatureService service = TemperatureService.getInstance();
+		
 		// set the custom dialog components - text, image and button
 		nedreGrense = (EditText)dialog.findViewById(R.id.editTextNedreGrense);
 		ovreGrense = (EditText)dialog.findViewById(R.id.editTextOvreGrense);
 		intervall = (EditText)dialog.findViewById(R.id.editText1);
+		
+		nedreGrense.setText(service.getNedreGrense() + "");
+		ovreGrense.setText(service.getOvreGrense() + "");
+		intervall.setText(service.getUpdateInterval() + "");
 		
 		Button dialogButton = (Button)dialog.findViewById(R.id.dialogButtonSaveAlert);
 		dialogButton.setOnClickListener(new OnClickListener() {
