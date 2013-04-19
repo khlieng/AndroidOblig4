@@ -140,8 +140,11 @@ public class MainActivity extends ListActivity {
 			public void onClick(View v) {
 				Log.e("Saving button clicked", "Click");
 				Toast.makeText(getApplicationContext(), "Saving.....", Toast.LENGTH_SHORT).show();
+				
 				if(TemperatureService.getInstance() != null) {
 					TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
+					TemperatureService.getInstance().setNedreGrense(Float.parseFloat(nedreGrense.getText().toString()));
+					TemperatureService.getInstance().setNedreGrense(Float.parseFloat(ovreGrense.getText().toString()));
 				}
 				dialog.dismiss();
 			}

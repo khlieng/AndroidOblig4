@@ -32,6 +32,7 @@ public class TemperatureService extends Service {
 	private static TemperatureService instance;
 
 	private static final int MY_NOTIFICATION_ID = 1;
+	private static final int MY_NOTIFICATION_ID2 = 2;
 	
 	public static TemperatureService getInstance() {
 		return instance;
@@ -47,6 +48,9 @@ public class TemperatureService extends Service {
 	private Handler handler = new Handler();
 	private float nedreGrense;
 	private float ovreGrense;
+	
+	String s ="";
+	String b = "";
 	@Override
 	public void onCreate() {
 		instance = this;
@@ -117,9 +121,15 @@ public class TemperatureService extends Service {
 
 	private void updateTemperatures() {
 		temperatures.clear();
+		s = "";
 		for (final String url : places) {
 			updateTemperature(url, false);
 		}
+		
+		if(s != "")
+		notiFyMe(s,MY_NOTIFICATION_ID,"Temperatur øvre grense");
+		if(b != "")
+			notiFyMe(b, MY_NOTIFICATION_ID2, "Temperatur nedre grense");
 		updateFinished();
 	}
 
@@ -139,10 +149,11 @@ public class TemperatureService extends Service {
 			
 			float temp = Float.parseFloat(temperature);
 			if(temp > ovreGrense){
-				notiFyMe();
+				s += place + " , ";
+				
 			}
 			else if(temp < nedreGrense){
-				notify();
+				b += place + " , ";
 			}
 			temperatures.add(new TemperatureData(place, url, temperature));
 		} catch (Exception e) {
@@ -223,16 +234,16 @@ public class TemperatureService extends Service {
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
 	}
 	
-	public void notiFyMe() {
+	public void notiFyMe(String _s, int id, String title) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 		.setSmallIcon(R.drawable.add)
-		.setContentTitle("Temperatur ")
+		.setContentTitle(title)
 		.setDefaults(Notification.DEFAULT_ALL)
-		.setStyle(new NotificationCompat.BigTextStyle().bigText(""));
+		.setStyle(new NotificationCompat.BigTextStyle().bigText(_s));
 		Notification notification = builder.build();
 		
 		NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		manager.notify(MY_NOTIFICATION_ID, notification);
+		manager.notify(id, notification);
 	}
 
 }
