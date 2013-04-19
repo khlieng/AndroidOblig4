@@ -4,14 +4,10 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,8 +25,6 @@ public class SearchActivity extends ListActivity {
 		private String name;
 		private String url;
 		
-		public String getName() { return name; }
-		public void setName(String name) { this.name = name; }
 		public String getURL() { return url; }
 		
 		public SearchItem(String name, String url) {
@@ -42,8 +36,6 @@ public class SearchActivity extends ListActivity {
 			return name;
 		}
 	}
-	
-	private ArrayList<String> selected = new ArrayList<String>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +86,14 @@ public class SearchActivity extends ListActivity {
 				
 				if (!TemperatureService.getPlaces().contains(url)) {
 					TemperatureService.addPlace(url);
-					//selected.add(url);
 					arg1.setBackgroundColor(highlight);
 					adapter.notifyDataSetChanged();
 				}
 				else {
 					TemperatureService.removePlace(url);
-					//selected.remove(url);
 					arg1.setBackgroundColor(Color.TRANSPARENT);
 					adapter.notifyDataSetChanged();
 				}
-				Toast.makeText(context, url + ", " + selected.size(), Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -127,7 +116,6 @@ public class SearchActivity extends ListActivity {
 				}
 				
 				if (places.contains(url)) {
-					//name += " <--";
 					if (getListView().getChildAt(i) != null) {
 						getListView().getChildAt(i).setBackgroundColor(highlight);
 					}

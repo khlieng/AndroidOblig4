@@ -17,26 +17,20 @@ import org.w3c.dom.Element;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
-import android.widget.Toast;
 
 public class TemperatureService extends Service {
 	private static TemperatureService instance;
-
-	private static final int MY_NOTIFICATION_ID = 1;
-	private static final int MY_NOTIFICATION_ID2 = 2;
-	
 	public static TemperatureService getInstance() {
 		return instance;
 	}
+
+	private static final int MY_NOTIFICATION_ID = 1;
+	private static final int MY_NOTIFICATION_ID2 = 2;	
 
 	private static ArrayList<String> places;
 
@@ -45,12 +39,12 @@ public class TemperatureService extends Service {
 	private TimerTask updateTask;
 	private ArrayList<TemperatureData> temperatures;
 	private static ArrayList<Runnable> updateListeners = new ArrayList<Runnable>();
-	private Handler handler = new Handler();
+
 	private float nedreGrense = -10;
-	private float ovreGrense = 20;
-	
-	String s ="";
+	private float ovreGrense = 20;	
+	String s = "";
 	String b = "";
+	
 	@Override
 	public void onCreate() {
 		instance = this;
@@ -59,36 +53,16 @@ public class TemperatureService extends Service {
 		loadPlaces();
 
 		startUpdateTimer();
-
-		toast("create");
-		//notiFyMe();
-
-	}
-	public void setNedreGrense(float nG){
-		 nedreGrense = nG;
-	}
-	public float getNedreGrense(){
-		
-		return nedreGrense;
-	}
-	public void setOvreGrense(float oG){
-		ovreGrense = oG;
-	}
-	public float getOvreGrense(){
-		return ovreGrense;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		toast("start");
 		return START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
 		updateTimer.cancel();
-
-		toast("destroy");
 	}
 
 	public ArrayList<TemperatureData> getTemperatures() {
@@ -103,6 +77,22 @@ public class TemperatureService extends Service {
 
 	public int getUpdateInterval() {
 		return updateInterval / 60000;
+	}
+	
+	public void setNedreGrense(float nG) {
+		 nedreGrense = nG;
+	}
+	
+	public float getNedreGrense() {		
+		return nedreGrense;
+	}
+	
+	public void setOvreGrense(float oG) {
+		ovreGrense = oG;
+	}
+	
+	public float getOvreGrense() {
+		return ovreGrense;
 	}
 
 	public static void addUpdateListener(Runnable r) {
@@ -125,12 +115,13 @@ public class TemperatureService extends Service {
 		b = "";
 		for (final String url : places) {
 			updateTemperature(url, false);
+		}		
+		if(s != "") {
+			notify(s,MY_NOTIFICATION_ID,"Temperatur øvre grense");
 		}
-		
-		if(s != "")
-		notiFyMe(s,MY_NOTIFICATION_ID,"Temperatur øvre grense");
-		if(b != "")
-			notiFyMe(b, MY_NOTIFICATION_ID2, "Temperatur nedre grense");
+		if(b != "") {
+			notify(b, MY_NOTIFICATION_ID2, "Temperatur nedre grense");
+		}
 		updateFinished();
 	}
 
@@ -141,17 +132,13 @@ public class TemperatureService extends Service {
 			builder = fac.newDocumentBuilder();
 			Document doc = builder.parse(url);
 			doc.getDocumentElement().normalize();
-			Element e = (Element) doc.getElementsByTagName("weatherstation")
-					.item(0);
-			String place = ((Element) doc.getElementsByTagName("name").item(0))
-					.getTextContent();
-			String temperature = e.getElementsByTagName("temperature").item(0)
-					.getAttributes().getNamedItem("value").getNodeValue();
+			Element e = (Element) doc.getElementsByTagName("weatherstation").item(0);
+			String place = ((Element) doc.getElementsByTagName("name").item(0)).getTextContent();
+			String temperature = e.getElementsByTagName("temperature").item(0).getAttributes().getNamedItem("value").getNodeValue();
 			
 			float temp = Float.parseFloat(temperature);
 			if(temp > ovreGrense){
-				s += place + " , ";
-				
+				s += place + " , ";				
 			}
 			else if(temp < nedreGrense){
 				b += place + " , ";
@@ -196,8 +183,7 @@ public class TemperatureService extends Service {
 
 	private void loadPlaces() {
 		try {
-			Scanner scan = new Scanner(getApplicationContext().openFileInput(
-					"trackedPlaces.txt"));
+			Scanner scan = new Scanner(getApplicationContext().openFileInput("trackedPlaces.txt"));
 			while (scan.hasNextLine()) {
 				places.add(scan.nextLine());
 			}
@@ -209,8 +195,7 @@ public class TemperatureService extends Service {
 
 	private static void savePlaces() {
 		try {
-			FileOutputStream output = Tools.getContext().openFileOutput(
-					"trackedPlaces.txt", Context.MODE_PRIVATE);
+			FileOutputStream output = Tools.getContext().openFileOutput("trackedPlaces.txt", Context.MODE_PRIVATE);
 			OutputStreamWriter writer = new OutputStreamWriter(output);
 
 			try {
@@ -225,26 +210,21 @@ public class TemperatureService extends Service {
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
-
-	private void toast(String text) {
-		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-	}
 	
-	public void notiFyMe(String _s, int id, String title) {
+	private void notify (String text, int id, String title) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 		.setSmallIcon(R.drawable.add)
 		.setContentTitle(title)
 		.setDefaults(Notification.DEFAULT_ALL)
-		.setStyle(new NotificationCompat.BigTextStyle().bigText(_s));
+		.setStyle(new NotificationCompat.BigTextStyle().bigText(text));
 		Notification notification = builder.build();
 		
 		NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(id, notification);
 	}
-
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 }

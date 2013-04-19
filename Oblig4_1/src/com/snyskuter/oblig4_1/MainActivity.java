@@ -23,10 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
-	private Button saveButtonAlertDialog;
 	final Context context = this;
 	private Handler handler = new Handler();
 	private boolean removing = false;
@@ -46,7 +44,6 @@ public class MainActivity extends ListActivity {
 			public void run() {
 				handler.post(new Runnable() {
 					public void run() {
-						Toast.makeText(context, "updating", Toast.LENGTH_LONG).show();
 						setListAdapter(new TemperatureAdapter(context, R.layout.row_temperature, TemperatureService.getInstance().getTemperatures()));
 					}
 				});
@@ -87,7 +84,6 @@ public class MainActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.LeggTil:
-			 Toast.makeText(this, "Legg til", Toast.LENGTH_SHORT).show();
 			 Intent i = new Intent(this,SearchActivity.class);
 			 startActivity(i);
 			break;
@@ -101,18 +97,15 @@ public class MainActivity extends ListActivity {
 			}
 			break;
 		case R.id.Instillinger:
-			Toast.makeText(this, "Instillinger", Toast.LENGTH_SHORT).show();
 			initAlertDialog();
 			break;
 		case R.id.start:
 			Log.e("Service STARTED", "Service Started");
-			Toast.makeText(this, "Starting service", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(this,TemperatureService.class);
 			startService(intent);
 			break;
 		case R.id.stop:
 			Log.e("Service STOP", "Service Stopped");
-			Toast.makeText(this, "Service stopped", Toast.LENGTH_SHORT).show();
 			Intent inte = new Intent(this,TemperatureService.class);
 			stopService(inte);
 			break;
@@ -129,28 +122,29 @@ public class MainActivity extends ListActivity {
 		dialog.setContentView(R.layout.properties_custom);
 		dialog.setTitle("Instillinger");
 		
-		TemperatureService service = TemperatureService.getInstance();
+		final TemperatureService service = TemperatureService.getInstance();
 		
 		// set the custom dialog components - text, image and button
 		nedreGrense = (EditText)dialog.findViewById(R.id.editTextNedreGrense);
 		ovreGrense = (EditText)dialog.findViewById(R.id.editTextOvreGrense);
 		intervall = (EditText)dialog.findViewById(R.id.editText1);
 		
-		nedreGrense.setText(service.getNedreGrense() + "");
-		ovreGrense.setText(service.getOvreGrense() + "");
-		intervall.setText(service.getUpdateInterval() + "");
+		if (service != null) {
+			nedreGrense.setText(service.getNedreGrense() + "");
+			ovreGrense.setText(service.getOvreGrense() + "");
+			intervall.setText(service.getUpdateInterval() + "");
+		}
 		
 		Button dialogButton = (Button)dialog.findViewById(R.id.dialogButtonSaveAlert);
 		dialogButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Log.e("Saving button clicked", "Click");
-				Toast.makeText(getApplicationContext(), "Saving.....", Toast.LENGTH_SHORT).show();
-				
-				if(TemperatureService.getInstance() != null) {
-					TemperatureService.getInstance().setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
-					TemperatureService.getInstance().setNedreGrense(Float.parseFloat(nedreGrense.getText().toString()));
-					TemperatureService.getInstance().setOvreGrense(Float.parseFloat(ovreGrense.getText().toString()));
+
+				if (service != null) {
+					service.setUpdateInterval(Integer.parseInt(intervall.getText().toString()));
+					service.setNedreGrense(Float.parseFloat(nedreGrense.getText().toString()));
+					service.setOvreGrense(Float.parseFloat(ovreGrense.getText().toString()));
 				}
 				dialog.dismiss();
 			}
@@ -193,4 +187,4 @@ public class MainActivity extends ListActivity {
 		
 		
 	}
-}//end activiy
+}//end activity
