@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.widget.Toast;
 
@@ -31,11 +32,7 @@ public class TemperatureService extends Service {
 	private static TemperatureService instance;
 
 	private static final int MY_NOTIFICATION_ID = 1;
-	private NotificationManager notificationManager;
-	private Notification notification;
 	
-	private final String myBlog = "http://hin.no";
-
 	public static TemperatureService getInstance() {
 		return instance;
 	}
@@ -48,8 +45,8 @@ public class TemperatureService extends Service {
 	private ArrayList<TemperatureData> temperatures;
 	private static ArrayList<Runnable> updateListeners = new ArrayList<Runnable>();
 	private Handler handler = new Handler();
-	
-	View view;
+	private float nedreGrense;
+	private float ovreGrense;
 	@Override
 	public void onCreate() {
 		instance = this;
@@ -60,8 +57,21 @@ public class TemperatureService extends Service {
 		startUpdateTimer();
 
 		toast("create");
-		notiFyMe(view);
+		//notiFyMe();
 
+	}
+	public void setNedreGrense(float nG){
+		 nedreGrense = nG;
+	}
+	public float getNedreGrense(){
+		
+		return nedreGrense;
+	}
+	public void setOvreGrense(float oG){
+		ovreGrense = oG;
+	}
+	public float getOvreGrense(){
+		return ovreGrense;
 	}
 
 	@Override
@@ -126,7 +136,14 @@ public class TemperatureService extends Service {
 					.getTextContent();
 			String temperature = e.getElementsByTagName("temperature").item(0)
 					.getAttributes().getNamedItem("value").getNodeValue();
-
+			
+			float temp = Float.parseFloat(temperature);
+			if(temp > ovreGrense){
+				notiFyMe();
+			}
+			else if(temp < nedreGrense){
+				notify();
+			}
 			temperatures.add(new TemperatureData(place, url, temperature));
 		} catch (Exception e) {
 		}
@@ -206,24 +223,16 @@ public class TemperatureService extends Service {
 		Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
 	}
 	
-	/**
-	 * Brukes for å lage en notification
-	 * @param v
-	 */
-	public void notiFyMe(View v) {
-		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notification = new Notification(R.drawable.add, "Notification!",System.currentTimeMillis());
-		Context context = getApplicationContext();
-		String notificationTitle = "Temperatur Notification";
-		String notificationText = "Temperatur";
-		Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(myBlog));
-		PendingIntent pendingIntent = PendingIntent.getActivity(TemperatureService.this, 0, myIntent,
-				Intent.FLAG_ACTIVITY_NEW_TASK);
-		notification.defaults |= notification.DEFAULT_SOUND;
-		notification.flags |= notification.FLAG_AUTO_CANCEL;
-		notification.setLatestEventInfo(context, notificationTitle,
-				notificationText, pendingIntent);
-		notificationManager.notify(MY_NOTIFICATION_ID, notification);
-	}//end method
+	public void notiFyMe() {
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+		.setSmallIcon(R.drawable.add)
+		.setContentTitle("Temperatur ")
+		.setDefaults(Notification.DEFAULT_ALL)
+		.setStyle(new NotificationCompat.BigTextStyle().bigText(""));
+		Notification notification = builder.build();
+		
+		NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(MY_NOTIFICATION_ID, notification);
+	}
 
-}//end class
+}
